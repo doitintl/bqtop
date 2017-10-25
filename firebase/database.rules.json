@@ -1,0 +1,12 @@
+{
+   "rules":{
+      "running-jobs":{
+        ".indexOn":["protoPayload/serviceData/jobInsertResponse/resource/jobName/jobId"]
+      },
+      "finished-jobs":{
+        ".indexOn":["protoPayload/serviceData/jobCompletedEvent/job/jobName/jobId"]
+      },
+      ".read":"auth != null",
+      ".write":"auth != null"
+   }
+}
