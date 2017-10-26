@@ -9,7 +9,8 @@ This repository contains the BQTop utility for viewing running and finshed Big-Q
 
 
 ###For later use
-`firebase list|grep -i BQTop |awk '{print $4}
+`npm install -g firebase-tools
+firebase list|grep -i BQTop |awk '{print $4}
 ggcloud components install beta
 gcloud beta logging sinks create my-sink1
 pubsub.googleapis.com/projects/$MyProj/topics/my-sync

@@ -20,7 +20,7 @@ return refRunning.push(pubSubMessage.json);
 
 
 // [START FinishedJobsPubSub]
-exports.FinishedJobsPubSub = functions.pubsub.topic('bqtop-finished-jobs').onPublish(event = > {
+exports.FinishedJobsPubSub = functions.pubsub.topic('bqtop-finished-jobs').onPublish(event => {
 
     const pubSubMessage = event.data;
 return refFinished.push(pubSubMessage.json);
