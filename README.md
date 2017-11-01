@@ -1,10 +1,10 @@
-#BQTop
+# BQTop
 
 This repository contains the BQTop utility for viewing running and finished Big-Query jobs.
 
-##Setup
+## Setup
 
-###Firebase
+### Firebase
 
 1. In your google cloud project create a Firebase project.
 2. Go to overview page and press `Add Firebase to your web app`
@@ -17,7 +17,7 @@ This repository contains the BQTop utility for viewing running and finished Big-
 9. Install firebase-tools `npm install -g firebase-tools`
 9. Install gcloud tools. Please follow the [official documentation](https://cloud.google.com/sdk/downloads)
 
-###Local Python App
+### Local Python App
 1. Make sure the you have python 3 installed.
 2. Go to the cli directory and run `pip install -r requirements.txt` 
 3. Create a config file (config.json) with the values you copied in the Firebase setup process. 
