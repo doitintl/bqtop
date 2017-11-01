@@ -2,7 +2,7 @@
 'use strict';
 
 // [START import]
-const functions = require('firebase-functions');
+const functions = require('firebase-functions'); // jshint ignore:line
 const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
 var db = admin.database();
@@ -16,7 +16,7 @@ exports.RunningJobsPubSub = functions.pubsub.topic('bqtop-running-jobs').onPubli
 
     const pubSubMessage = event.data;
     return refRunning.push(pubSubMessage.json);
-})
+});
 // [END RunningJobsPubSub]
 
 
@@ -24,25 +24,25 @@ exports.RunningJobsPubSub = functions.pubsub.topic('bqtop-running-jobs').onPubli
 exports.FinishedJobsPubSub = functions.pubsub.topic('bqtop-finished-jobs').onPublish(event => {
     const pubSubMessage = event.data;
     return refFinished.push(pubSubMessage.json);
-})
+});
 
 // [END FinishedJobsPubSub]
 
 // [START DeleteRunningJobFromFinished]
 exports.DeleteRunningJobFromFinished = functions.database.ref('finished-jobs/{key}').onCreate(event =>
     {
-        const runningRef = event.data.adminRef.root.child('running-jobs')
-        const jobId = event.data.val()['protoPayload']['serviceData']['jobCompletedEvent']['job']['jobName']['jobId']
+        const runningRef = event.data.adminRef.root.child('running-jobs');
+        const jobId = event.data.val()['protoPayload']['serviceData']['jobCompletedEvent']['job']['jobName']['jobId'];
         runningRef.orderByChild('protoPayload/serviceData/jobInsertResponse/resource/jobName/jobId')
         .equalTo(jobId).once("value", function (snapshot) {
         snapshot.forEach(function (data) {
-            runningRef.child(data.key).remove()
+            runningRef.child(data.key).remove();
 
-    })
+    });
 
 });
 
-})
+});
 // [END DeleteRunningJobFromFinished]
 
 
@@ -50,23 +50,23 @@ exports.DeleteRunningJobFromFinished = functions.database.ref('finished-jobs/{ke
 exports.DeleteRunningJobFromRunning = functions.database.ref('running-jobs/{key}').onCreate(event => {
     const runningRef = event.data.adminRef.root.child('running-jobs');
     const finishedRef = event.data.adminRef.root.child('finished-jobs');
-    const jobId = event.data.val()['protoPayload']['serviceData']['jobInsertResponse']['resource']['jobName']['jobId']
+    const jobId = event.data.val()['protoPayload']['serviceData']['jobInsertResponse']['resource']['jobName']['jobId'];
     finishedRef.orderByChild('protoPayload/serviceData/jobCompletedEvent/job/jobName/jobId').
     equalTo(jobId).once("value", function (snapshot) {
         snapshot.forEach(function (data) {
             runningRef.orderByChild('protoPayload/serviceData/jobInsertResponse/resource/jobName/jobId').equalTo(jobId)
                 .once("value", function (snapshot) {
                     snapshot.forEach(function (data) {
-                        runningRef.child(data.key).remove()
+                        runningRef.child(data.key).remove();
 
-                    })
+                    });
 
                 });
 
 
-        })
+        });
 
 });
 
-})
+});
 // [END DeleteRunningJobFromRunning]

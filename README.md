@@ -16,6 +16,7 @@ This repository contains the BQTop utility for viewing running and finished Big-
 8. Rename the file `bqtop-service-account.json` and save it in the `cli` directory.
 9. Install firebase-tools `npm install -g firebase-tools`
 9. Install gcloud tools. Please follow the [official documentation](https://cloud.google.com/sdk/downloads)
+10. Run `./install.sh projectId`
 
 ### Local Python App
 1. Make sure the you have python 3 installed.
