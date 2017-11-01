@@ -1,3 +1,4 @@
+arrow==0.10.0
 gcloud==0.17.0
 googleapis-common-protos==1.5.3
 httplib2==0.10.3
@@ -7,7 +8,9 @@ protobuf==3.4.0
 pyasn1==0.3.7
 pyasn1-modules==0.1.5
 pycryptodome==3.4.3
+pyflakes==1.6.0
 Pyrebase==3.0.27
+python-dateutil==2.6.1
 python-jwt==2.0.1
 requests==2.11.1
 requests-toolbelt==0.7.0

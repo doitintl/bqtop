@@ -13,17 +13,17 @@ var refFinished = db.ref('/finished-jobs');
 // [START RunningJobsPubSub]
 exports.RunningJobsPubSub = functions.pubsub.topic('bqtop-running-jobs').onPublish(event => {
 // [END trigger]
+
     const pubSubMessage = event.data;
-return refRunning.push(pubSubMessage.json);
+    return refRunning.push(pubSubMessage.json);
 })
 // [END RunningJobsPubSub]
 
 
 // [START FinishedJobsPubSub]
 exports.FinishedJobsPubSub = functions.pubsub.topic('bqtop-finished-jobs').onPublish(event => {
-
     const pubSubMessage = event.data;
-return refFinished.push(pubSubMessage.json);
+    return refFinished.push(pubSubMessage.json);
 })
 
 // [END FinishedJobsPubSub]

@@ -204,5 +204,6 @@ fabric.properties
 # End of https://www.gitignore.io/api/pycharm,webstorm+all
 tags
 bqtop-service-account.json
+config.json
 add
 node_modules/
