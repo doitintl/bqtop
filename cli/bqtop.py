@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+"""bqtop.py - Display BigQuery jobs in top style."""
 import curses
 import json
 import time
@@ -7,20 +8,36 @@ import arrow
 import pyrebase
 
 SHOULD_FETCH_RUNNING = True
-SHOULD_FETCH_FINSHED = True
+SHOULD_FETCH_FINISHED = True
 
 
 def running_stream_handler(message):
+    """
+    Call back on new running jobs.
+
+    :param message:
+    """
     global SHOULD_FETCH_RUNNING
     SHOULD_FETCH_RUNNING = True
 
 
 def finished_stream_handler(message):
-    global SHOULD_FETCH_FINSHED
-    SHOULD_FETCH_FINSHED = True
+    """
+    Call back on finished jobs.
+
+    :param message:
+    """
+    global SHOULD_FETCH_FINISHED
+    SHOULD_FETCH_FINISHED = True
 
 
 def get_running_jobs(window):
+    """
+    Get all running jobs and add the to the window.
+
+    :param window:
+    :return:
+    """
     global SHOULD_FETCH_RUNNING
     if not SHOULD_FETCH_RUNNING:
         return
@@ -33,33 +50,39 @@ def get_running_jobs(window):
         'Id', 'User', 'IP', 'Start Time', ' ', ' '),
                   curses.A_BOLD | curses.A_REVERSE)
     running_jobs = db.child("running-jobs").get()
-    cnt = 2
+    counter = 2
     if running_jobs.pyres is not None:
         for job in running_jobs.each():
-            window.addstr(cnt, 1, '%-30s %-20s %-16s %-24s' % (
-                job.val()['protoPayload']['serviceData']['jobInsertResponse'][
+            data = job.val()
+            window.addstr(counter, 1, '%-30s %-20s %-16s %-24s' % (
+                data['protoPayload']['serviceData']['jobInsertResponse'][
                     'resource']['jobName']['jobId'],
-                job.val()['protoPayload']['authenticationInfo'][
+                data['protoPayload']['authenticationInfo'][
                     'principalEmail'],
-                job.val()['protoPayload']['requestMetadata']['callerIp'],
-                arrow.get(job.val()['protoPayload']['serviceData'][
+                data['protoPayload']['requestMetadata']['callerIp'],
+                arrow.get(data['protoPayload']['serviceData'][
                     'jobInsertResponse'][
                         'resource']['jobStatistics'][
                             'startTime']).format('YYYY-MM-DD HH:mm:ss')))
-            window.chgat(cnt, 1, 133, curses.A_BOLD | curses.color_pair(2))
-            cnt += 1
-    window.addstr(cnt, 0, ' ' * (curses.COLS - 1))
+            window.chgat(counter, 1, 133, curses.A_BOLD | curses.color_pair(2))
+            counter += 1
+    window.addstr(counter, 0, ' ' * (curses.COLS - 1))
     window.move(curses.LINES - 2, curses.COLS - 2)
 
 
 def get_finished_jobs(window):
-    global SHOULD_FETCH_FINSHED
-    if not SHOULD_FETCH_FINSHED:
-        return
-    window.erase()
+    """
+    Get all done jobs and add the to the window.
 
-    SHOULD_FETCH_FINSHED = False
-    cnt = 2
+    :param window:
+    :return:
+    """
+    global SHOULD_FETCH_FINISHED
+    if not SHOULD_FETCH_FINISHED:
+        return
+    SHOULD_FETCH_FINISHED = False
+    window.erase()
+    counter = 2
     window.addstr(0, 1, '%-32s  %-8s' % (
         'BQPS Finished Jobs - Last Update:', time.ctime()))
     window.chgat(0, 1, 133, curses.A_BOLD | curses.color_pair(3))
@@ -69,34 +92,40 @@ def get_finished_jobs(window):
     finished_jobs = db.child("finished-jobs").order_by_key().limit_to_last(
         100).get()
     if finished_jobs.pyres is not None:
-        flen = len(finished_jobs.pyres)
-        cnt = cnt + flen
+        finished_len = len(finished_jobs.pyres)
+        counter = counter + finished_len
         for job in finished_jobs.each():
+            data = job.val()
             start = arrow.get(
-                job.val()['protoPayload']['serviceData']['jobCompletedEvent'][
+                data['protoPayload']['serviceData']['jobCompletedEvent'][
                     'job']['jobStatistics']['startTime'])
             end = arrow.get(
-                job.val()['protoPayload']['serviceData']['jobCompletedEvent'][
+                data['protoPayload']['serviceData']['jobCompletedEvent'][
                     'job']['jobStatistics']['endTime'])
             delta = end - start
-            window.addstr(cnt, 1, '%-30s %-20s %-16s %-24s %-24s %-12s' % (
-                job.val()['protoPayload']['serviceData']['jobCompletedEvent'][
+            window.addstr(counter, 1, '%-30s %-20s %-16s %-24s %-24s %-12s' % (
+                data['protoPayload']['serviceData']['jobCompletedEvent'][
                     'job']['jobName']['jobId'],
-                job.val()['protoPayload']['authenticationInfo'][
+                data['protoPayload']['authenticationInfo'][
                     'principalEmail'],
-                job.val()['protoPayload']['requestMetadata']['callerIp'],
+                data['protoPayload']['requestMetadata']['callerIp'],
                 start.format('YYYY-MM-DD HH:mm:ss'),
                 end.format('YYYY-MM-DD HH:mm:ss'),
                 delta,
 
             )
                          )
-            window.chgat(cnt, 1, 133, curses.A_BOLD | curses.color_pair(3))
-            cnt -= 1
-    window.addstr(cnt, 0, ' ' * (curses.COLS - 1))
+            window.chgat(counter, 1, 133, curses.A_BOLD | curses.color_pair(3))
+            counter -= 1
+    window.addstr(counter, 0, ' ' * (curses.COLS - 1))
 
 
 def start_curses(stdscr):
+    """
+    Init the curser system setup the system and start the main loop.
+
+    :param stdscr:
+    """
     curses.use_default_colors()
 
     curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
