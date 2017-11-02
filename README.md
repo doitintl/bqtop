@@ -25,7 +25,7 @@ This repository contains the BQTop utility for viewing running and finished Big-
 2. Go to the cli directory and run `pip install -r requirements.txt` 
 3. Create a config file (config.json) with the values you copied in the Firebase setup process. 
 
-```
+```python
 {
      "apiKey": "apiKey",
      "authDomain": "projectId.firebaseapp.com",
