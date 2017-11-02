@@ -33,5 +33,4 @@ This repository contains the BQTop utility for viewing running and finished Big-
      "storageBucket": "projectId.appspot.com",
      "serviceAccount": "bqtop-service-account.json"
  }
- ```
-
+```
