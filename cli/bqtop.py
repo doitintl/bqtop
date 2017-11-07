@@ -56,7 +56,7 @@ def get_running_jobs(window):
             data = job.val()
             window.addstr(counter, 1, '%-60s %-30s %-16s %-24s' % (
                 data['protoPayload']['serviceData']['jobInsertResponse'][
-                    'resource']['jobName']['jobId'],
+                    'resource']['jobName']['jobId'][-60:],
                 data['protoPayload']['authenticationInfo'][
                     'principalEmail'].split("@")[0],
                 data['protoPayload']['requestMetadata']['callerIp'],
@@ -103,7 +103,7 @@ def get_finished_jobs(window):
             delta = end - start
             window.addstr(counter, 1, '%-60s %-30s %-16s %-24s %-24s %-12s' % (
                 data['protoPayload']['serviceData']['jobCompletedEvent'][
-                    'job']['jobName']['jobId'],
+                    'job']['jobName']['jobId'][-60:],
                 data['protoPayload']['authenticationInfo'][
                     'principalEmail'].split("@")[0],
                 data['protoPayload']['requestMetadata']['callerIp'],
