@@ -22,7 +22,7 @@ function error_exit
     echo "$1" 1>&2
     exit 1
 }
-PROJECTID=`firebase list|grep -i $1 |awk '{print $4}'`
+PROJECTID=`firebase list|grep -i $1 |awk 'BEGIN { FS="│" }  { print $3 }'`
 if [ -z "$PROJECTID" ]; then
  echo Project $1 Not Found!
  exit 
