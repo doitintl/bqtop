@@ -5,5 +5,13 @@
     "firebase-admin": "~5.4.0",
     "firebase-functions": "^0.7.0"
   },
-  "private": true
+  "private": true,
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
 }
