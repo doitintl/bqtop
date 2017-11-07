@@ -46,27 +46,24 @@ def get_running_jobs(window):
     SHOULD_FETCH_RUNNING = False
     window.addstr(0, 1, '%-32s  %-8s' % (
         'BQTop Running Jobs - Last Update:', time.ctime()))
-    window.chgat(0, 1, maxx, curses.A_STANDOUT | curses.color_pair(2))
-    window.addstr(1, 1, '%-45s %-20s %-16s %-24s %-24s %-14s' % (
+    window.addstr(1, 1, '%-60s %-30s %-16s %-24s %-24s %-14s' % (
         'Id', 'User', 'IP', 'Start Time', ' ', '  '),
                   curses.A_BOLD | curses.A_REVERSE)
-    window.chgat(1, 1, maxx, curses.A_BOLD | curses.color_pair(2))
     running_jobs = db.child("running-jobs").get()
     counter = 2
     if running_jobs.pyres is not None:
         for job in running_jobs.each():
             data = job.val()
-            window.addstr(counter, 1, '%-45s %-20s %-16s %-24s' % (
+            window.addstr(counter, 1, '%-60s %-30s %-16s %-24s' % (
                 data['protoPayload']['serviceData']['jobInsertResponse'][
                     'resource']['jobName']['jobId'],
                 data['protoPayload']['authenticationInfo'][
-                    'principalEmail'],
+                    'principalEmail'].split("@")[0],
                 data['protoPayload']['requestMetadata']['callerIp'],
                 arrow.get(data['protoPayload']['serviceData'][
                     'jobInsertResponse'][
                         'resource']['jobStatistics'][
                             'startTime']).format('YYYY-MM-DD HH:mm:ss')))
-            window.chgat(counter, 1, maxx, curses.A_BOLD | curses.color_pair(2))
             counter += 1
     window.addstr(counter, 0, ' ' * (maxx- 1))
     window.move(maxy - 2, maxx - 2)
@@ -87,11 +84,9 @@ def get_finished_jobs(window):
     window.erase()
     window.addstr(0, 1, '%-32s  %-8s' % (
         'BQTop Finished Jobs - Last Update:', time.ctime()))
-    window.chgat(0, 1, maxx, curses.A_BOLD | curses.color_pair(3))
-    window.addstr(1, 1, '%-45s %-20s %-16s %-24s %-24s %-12s' % (
+    window.addstr(1, 1, '%-60s %-30s %-16s %-24s %-24s %-12s' % (
         'Id', 'User', 'IP', 'Start Time', 'End Time', "Execution Time"),
                   curses.A_BOLD | curses.A_REVERSE)
-    window.chgat(1, 1, maxx, curses.A_BOLD | curses.color_pair(3))
     finished_jobs = db.child("finished-jobs").order_by_key().limit_to_last(
         50).get()
     if finished_jobs.pyres is not None:
@@ -106,11 +101,11 @@ def get_finished_jobs(window):
                 data['protoPayload']['serviceData']['jobCompletedEvent'][
                     'job']['jobStatistics']['endTime'])
             delta = end - start
-            window.addstr(counter, 1, '%-45s %-20s %-16s %-24s %-24s %-12s' % (
+            window.addstr(counter, 1, '%-60s %-30s %-16s %-24s %-24s %-12s' % (
                 data['protoPayload']['serviceData']['jobCompletedEvent'][
                     'job']['jobName']['jobId'],
                 data['protoPayload']['authenticationInfo'][
-                    'principalEmail'],
+                    'principalEmail'].split("@")[0],
                 data['protoPayload']['requestMetadata']['callerIp'],
                 start.format('YYYY-MM-DD HH:mm:ss'),
                 end.format('YYYY-MM-DD HH:mm:ss'),
@@ -118,7 +113,6 @@ def get_finished_jobs(window):
 
             )
                          )
-            window.chgat(counter, 1, maxx, curses.A_BOLD | curses.color_pair(3))
             counter -= 1
     window.addstr(counter, 0, ' ' * (maxx - 1))
 
@@ -133,12 +127,7 @@ def start_curses(stdscr):
     maxy, maxx = stdscr.getmaxyx()
     curses.use_default_colors()
 
-    curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
-    curses.init_pair(2, curses.COLOR_GREEN, curses.COLOR_BLACK)
-    curses.init_pair(3, curses.COLOR_CYAN, curses.COLOR_BLACK)
     stdscr.addstr(maxy - 1, 0, "Press 'Q' to quit")
-    # Change the  Q to Red
-    stdscr.chgat(maxy - 1, 7, 1, curses.A_BOLD | curses.color_pair(1))
     running_window = curses.newpad(1000, maxx)
     finished_window = curses.newpad(1000, maxx)
     while True:

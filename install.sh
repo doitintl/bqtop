@@ -22,6 +22,10 @@ function error_exit
     echo "$1" 1>&2
     exit 1
 }
+if [ $# -eq 0 ]
+  then
+    error_exit "No arguments supplied"
+fi
 PROJECTID=`firebase list|grep -i $1 |awk 'BEGIN { FS="│" }  { print $3 }'`
 if [ -z "$PROJECTID" ]; then
  echo Project $1 Not Found!
@@ -42,7 +46,7 @@ gcloud beta pubsub topics create  bqtop-finished-jobs --project=$PROJECTID --qui
 echo "done"
 
 echo -n "* Creating Log Export sinks..."
-gcloud  logging sinks create bqtop-running-jobs-export pubsub.googleapis.com/projects/$PROJECTID/topics/bqtop-running-jobs  --log-filter="resource.type="bigquery_resource" "protoPayload.methodName="jobservice.insert" --quiet >/dev/null || error_exit "Error creating Pub/Sub topics"
+gcloud  logging sinks create bqtop-running-jobs-export pubsub.googleapis.com/projects/$PROJECTID/topics/bqtop-running-jobs  --log-filter="resource.type="bigquery_resource" "protoPayload.methodName="jobservice.insert "severity="Info "protoPayload.serviceData.jobInsertRequest.resource.jobConfiguration.dryRun="false"  --quiet >/dev/null || error_exit "Error creating Pub/Sub topics"
 ServiceAccountR=`gcloud logging sinks describe bqtop-running-jobs-export|grep writerIdentity|awk '{print $2}'`
 gcloud projects add-iam-policy-binding $PROJECTID --member=$ServiceAccountR --role='roles/pubsub.publisher'  --quiet >/dev/null || error_exit "Error creating Pub/Sub topics"
 
