@@ -11,7 +11,7 @@ This repository contains the BQTop utility for viewing running and finished Big-
 1. In your google cloud project create a Firebase project.
 2. Go to overview page and press `Add Firebase to your web app`
 3. Copy the following keys: `apiKey, authDomain, databaseURL storageBucket`
-4. Navigate to the Service Accounts tab in your project's settings page.
+4. Navigate to the [Service Accounts](https://console.cloud.google.com/iam-admin/serviceaccounts/) tab in your project's settings page.
 5. Select your Firebase project.
 6. Click the Generate New Private Key button at the bottom of the Firebase Admin SDK section of the Service Accounts tab.
 7. After you click the button, a JSON file containing your service account's credentials will be downloaded.
