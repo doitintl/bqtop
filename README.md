@@ -16,7 +16,6 @@ This repository contains the BQTop utility for viewing running and finished Big-
 6. Click the Generate New Private Key button at the bottom of the Firebase Admin SDK section of the Service Accounts tab.
 7. After you click the button, a JSON file containing your service account's credentials will be downloaded.
 8. Rename the file `bqtop-service-account.json` and save it in the `cli` directory.
-9. Install firebase-tools `npm install -g firebase-tools`
 9. Install gcloud tools. Please follow the [official documentation](https://cloud.google.com/sdk/downloads)
 10. Run `./install.sh projectId`
 

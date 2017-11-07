@@ -29,7 +29,11 @@ if [ -z "$PROJECTID" ]; then
 fi
 echo Project ID $PROJECTID
 gcloud config set project $PROJECTID
-
+echo -n "* Installing NPM Packages..."
+npm install -g firebase-tools
+cd firebase/functions/
+npm install
+cd ../..
 echo -n "* Creating Pub/Sub topics..."
 
 gcloud beta pubsub topics create  bqtop-running-jobs --project=$PROJECTID --quiet >/dev/null || error_exit "Error creating Pub/Sub topics"
