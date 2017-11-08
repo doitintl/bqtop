@@ -84,14 +84,14 @@ def get_finished_jobs(window):
     window.erase()
     window.addstr(0, 1, '%-32s  %-8s' % (
         'BQTop Finished Jobs - Last Update:', time.ctime()))
-    window.addstr(1, 1, '%-60s %-30s %-16s %-24s %-24s %-12s' % (
+    window.addstr(1, 1, '%-60s %-30s %-16s %-24s %-24s %-12s ' % (
         'Id', 'User', 'IP', 'Start Time', 'End Time', "Execution Time"),
                   curses.A_BOLD | curses.A_REVERSE)
     finished_jobs = db.child("finished-jobs").order_by_key().limit_to_last(
         50).get()
     if finished_jobs.pyres is not None:
         finished_len = len(finished_jobs.pyres)
-        counter = finished_len + 2
+        counter = finished_len + 1
         for job in finished_jobs.each():
             data = job.val()
             start = arrow.get(
@@ -114,7 +114,8 @@ def get_finished_jobs(window):
             )
                          )
             counter -= 1
-    window.addstr(counter, 0, ' ' * (maxx - 1))
+    window.addstr(finished_len + 1, 0, ' ' * (maxx - 1))
+    window.move(maxy - 2, maxx - 2)
 
 
 
