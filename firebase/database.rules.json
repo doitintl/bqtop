@@ -4,7 +4,7 @@
         ".indexOn":["protoPayload/serviceData/jobInsertResponse/resource/jobName/jobId"]
       },
       "finished-jobs":{
-        ".indexOn":["protoPayload/serviceData/jobCompletedEvent/job/jobName/jobId"]
+        ".indexOn":["protoPayload/serviceData/jobCompletedEvent/job/jobName/jobId", "receiveTimestamp"]
       },
       ".read":"auth != null",
       ".write":"auth != null"

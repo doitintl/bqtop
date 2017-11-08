@@ -26,7 +26,7 @@ if [ $# -eq 0 ]
   then
     error_exit "No arguments supplied"
 fi
-PROJECTID=`firebase list|grep -i $1 |awk 'BEGIN { FS="│" }  { print $3 }'`
+PROJECTID=`firebase list | grep -i $1 | awk 'BEGIN { FS="│" } { printf $3 }' | sed 's/ //g'`
 if [ -z "$PROJECTID" ]; then
  echo Project $1 Not Found!
  exit 
@@ -34,32 +34,39 @@ fi
 echo Project ID $PROJECTID
 gcloud config set project $PROJECTID
 echo -n "* Installing NPM Packages..."
-npm install -g firebase-tools
+# npm install -g firebase-tools
 cd firebase/functions/
-npm install
+# npm install
 cd ../..
 echo -n "* Creating Pub/Sub topics..."
 
-gcloud beta pubsub topics create  bqtop-running-jobs --project=$PROJECTID --quiet >/dev/null || error_exit "Error creating Pub/Sub topics"
-gcloud beta pubsub topics create  bqtop-finished-jobs --project=$PROJECTID --quiet >/dev/null || error_exit "Error creating Pub/Sub topics"
+gcloud beta pubsub topics create bqtop-running-jobs --project=$PROJECTID --quiet >/dev/null || error_exit "Error creating Pub/Sub topics"
+gcloud beta pubsub topics create bqtop-finished-jobs --project=$PROJECTID --quiet >/dev/null || error_exit "Error creating Pub/Sub topics"
 
 echo "done"
 
 echo -n "* Creating Log Export sinks..."
-gcloud  logging sinks create bqtop-running-jobs-export pubsub.googleapis.com/projects/$PROJECTID/topics/bqtop-running-jobs  --log-filter="resource.type="bigquery_resource" "protoPayload.methodName="jobservice.insert "severity="Info "protoPayload.serviceData.jobInsertRequest.resource.jobConfiguration.dryRun="false"  --quiet >/dev/null || error_exit "Error creating Pub/Sub topics"
-ServiceAccountR=`gcloud logging sinks describe bqtop-running-jobs-export|grep writerIdentity|awk '{print $2}'`
-gcloud projects add-iam-policy-binding $PROJECTID --member=$ServiceAccountR --role='roles/pubsub.publisher'  --quiet >/dev/null || error_exit "Error creating Pub/Sub topics"
 
-gcloud logging sinks create bqtop-finished-jobs-export pubsub.googleapis.com/projects/$PROJECTID/topics/bqtop-finished-jobs --log-filter="resource.type="bigquery_resource" "protoPayload.methodName="jobservice.jobcompleted"  --quiet >/dev/null || error_exit "Error creating Pub/Sub topics"
+gcloud logging sinks create bqtop-running-jobs-export pubsub.googleapis.com/projects/$PROJECTID/topics/bqtop-running-jobs --project=$PROJECTID --log-filter 'resource.type="bigquery_resource" protoPayload.methodName="jobservice.insert" severity="Info" protoPayload.serviceData.jobInsertRequest.resource.jobConfiguration.dryRun="false"' --quiet >/dev/null || error_exit "Error creating Log Export sink"
+
+ServiceAccountR=`gcloud logging sinks describe bqtop-running-jobs-export|grep writerIdentity|awk '{print $2}'`
+gcloud projects add-iam-policy-binding $PROJECTID --member=$ServiceAccountR --role='roles/pubsub.publisher'  --quiet >/dev/null || error_exit "Error creating Log Export sink"
+
+gcloud logging sinks create bqtop-finished-jobs-export pubsub.googleapis.com/projects/$PROJECTID/topics/bqtop-finished-jobs --project=$PROJECTID --log-filter 'resource.type="bigquery_resource" protoPayload.methodName="jobservice.jobcompleted"' --quiet >/dev/null || error_exit "Error creating Pub/Sub topics"
+
 ServiceAccountF=`gcloud logging sinks describe bqtop-finished-jobs-export|grep writerIdentity|awk '{print $2}'`
 gcloud projects add-iam-policy-binding $PROJECTID --member=$ServiceAccountF --role='roles/pubsub.publisher'  --quiet >/dev/null || error_exit "Error creating Pub/Sub topics"
+
 echo "done"
+
 cd firebase/ui
 if [ ! -f .env.production ]; then
     echo "File .env.production not found in firebase/ui !"
     exit
 fi
-yarn build
+yarn install
+yarn run build
+
 cd ..
 firebase use --add $PROJECTID
 firebase deploy
