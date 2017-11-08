@@ -55,7 +55,7 @@ ServiceAccountF=`gcloud logging sinks describe bqtop-finished-jobs-export|grep w
 gcloud projects add-iam-policy-binding $PROJECTID --member=$ServiceAccountF --role='roles/pubsub.publisher'  --quiet >/dev/null || error_exit "Error creating Pub/Sub topics"
 echo "done"
 cd firebase/ui
-if [ ! -f /tmp/foo.txt ]; then
+if [ ! -f .env.production ]; then
     echo "File .env.production not found in firebase/ui !"
     exit
 fi
