@@ -43,3 +43,4 @@ REACT_APP_FIREBASE_DATABASE_URL="databaseURL"
 REACT_APP_FIREBASE_PROJECT_ID="projectId"
 REACT_APP_FIREBASE_STORAGE_BUCKET="storageBucket"
 ```
+2. OPTIONAL: Edit firebase rules to allow specific logged in users to read data instead of any authenticated user.
