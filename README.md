@@ -2,7 +2,7 @@
 
 This repository contains the BQTop utility for viewing running and finished Big-Query jobs.
 
-![](BQTop.gif)
+![](https://storage.googleapis.com/bqtop-asset/BQTop.gif)
 
 ## Setup
 
