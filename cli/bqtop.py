@@ -46,7 +46,7 @@ def get_running_jobs(window):
     SHOULD_FETCH_RUNNING = False
     window.addstr(0, 1, '%-32s  %-8s' % (
         'BQTop Running Jobs - Last Update:', time.ctime()))
-    window.addstr(1, 1, '%-60s %-30s %-16s %-24s %-24s %-14s' % (
+    window.addstr(1, 1, '%-65s %-60s %-16s %-24s %-24s %-14s' % (
         'Id', 'User', 'IP', 'Start Time', ' ', '  '),
                   curses.A_BOLD | curses.A_REVERSE)
     running_jobs = db.child("running-jobs").get()
@@ -54,7 +54,7 @@ def get_running_jobs(window):
     if running_jobs.pyres is not None:
         for job in running_jobs.each():
             data = job.val()
-            window.addstr(counter, 1, '%-60s %-30s %-16s %-24s' % (
+            window.addstr(counter, 1, '%-65s %-60s %-16s %-24s' % (
                 data['protoPayload']['serviceData']['jobInsertResponse'][
                     'resource']['jobName']['jobId'][-60:],
                 data['protoPayload']['authenticationInfo'][
@@ -84,7 +84,7 @@ def get_finished_jobs(window):
     window.erase()
     window.addstr(0, 1, '%-32s  %-8s' % (
         'BQTop Finished Jobs - Last Update:', time.ctime()))
-    window.addstr(1, 1, '%-60s %-30s %-16s %-24s %-24s %-12s ' % (
+    window.addstr(1, 1, '%-65s %-60s %-16s %-24s %-24s %-12s ' % (
         'Id', 'User', 'IP', 'Start Time', 'End Time', "Execution Time"),
                   curses.A_BOLD | curses.A_REVERSE)
     finished_jobs = db.child("finished-jobs").order_by_key().limit_to_last(
@@ -101,7 +101,7 @@ def get_finished_jobs(window):
                 data['protoPayload']['serviceData']['jobCompletedEvent'][
                     'job']['jobStatistics']['endTime'])
             delta = end - start
-            window.addstr(counter, 1, '%-60s %-30s %-16s %-24s %-24s %-12s' % (
+            window.addstr(counter, 1, '%-65s %-60s %-16s %-24s %-24s %-12s' % (
                 data['protoPayload']['serviceData']['jobCompletedEvent'][
                     'job']['jobName']['jobId'][-60:],
                 data['protoPayload']['authenticationInfo'][
