@@ -54,7 +54,13 @@ gcloud logging sinks create bqtop-finished-jobs-export pubsub.googleapis.com/pro
 ServiceAccountF=`gcloud logging sinks describe bqtop-finished-jobs-export|grep writerIdentity|awk '{print $2}'`
 gcloud projects add-iam-policy-binding $PROJECTID --member=$ServiceAccountF --role='roles/pubsub.publisher'  --quiet >/dev/null || error_exit "Error creating Pub/Sub topics"
 echo "done"
-cd firebase
-firebase use --add  $PROJECTID
+cd firebase/ui
+if [ ! -f /tmp/foo.txt ]; then
+    echo "File .env.production not found in firebase/ui !"
+    exit
+fi
+yarn build
+cd ..
+firebase use --add $PROJECTID
 firebase deploy
 cd ..

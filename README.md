@@ -35,7 +35,7 @@ This repository contains the BQTop utility for viewing running and finished Big-
 ```
 
 ### Hosted Firebase App
-1. Create `.env.production` in [a relative link](firebase/ui) folder with the following variables
+1. Create `.env.production` in [a firebase/ui](firebase/ui) with the values you copied in the Firebase setup process.
 ```
 REACT_APP_FIREBASE_API_KEY="apiKey"
 REACT_APP_FIREBASE_AUTH_DOMAIN="authDomain"
