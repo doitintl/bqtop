@@ -20,7 +20,7 @@ This repository contains the BQTop utility for viewing running and finished Big-
 10. Run `./install.sh projectId`
 
 ### Local Python App
-1. Make sure the you have python 3 installed.
+1. Make sure that you have python 3 installed.
 2. Go to the cli directory and run `pip install -r requirements.txt` 
 3. Create a config file (config.json) with the values you copied in the Firebase setup process. 
 
@@ -32,4 +32,14 @@ This repository contains the BQTop utility for viewing running and finished Big-
      "storageBucket": "projectId.appspot.com",
      "serviceAccount": "bqtop-service-account.json"
  }
+```
+
+### Hosted Firebase App
+1. Create `.env.production` in [a relative link](firebase/ui) folder with the following variables
+```
+REACT_APP_FIREBASE_API_KEY="apiKey"
+REACT_APP_FIREBASE_AUTH_DOMAIN="authDomain"
+REACT_APP_FIREBASE_DATABASE_URL="databaseURL"
+REACT_APP_FIREBASE_PROJECT_ID="projectId"
+REACT_APP_FIREBASE_STORAGE_BUCKET="storageBucket"
 ```

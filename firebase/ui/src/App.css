@@ -1,0 +1,43 @@
+div.header {
+  margin: 8px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.header button {
+  margin-right: 8px;
+}
+
+.header span {
+  font-size: 80%;
+}
+
+h4 {
+  text-align: center;
+}
+
+.grid-item {
+  font-size: 0.75rem;
+  padding: 0;
+  /* background-color: #A5D6A7; */
+  /* border-radius: 1px; */
+  /* border: 2px solid #3F51B5; */
+  /* color: white; */
+}
+
+.grid-item p {
+  text-align: left;
+  margin: 0.5em 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* overflow-wrap: break-word; */
+}
+
+.grid-item h3, .grid-item  h4 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
+  margin: 0.5em 0;
+}
