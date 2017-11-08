@@ -12,7 +12,7 @@
 #          BUGS: ---
 #         NOTES: ---
 #        AUTHOR: Aviv Laufer (), aviv@doit-int.com
-#  ORGANIZATION: DoIt International
+#  ORGANIZATION: DoiT International
 #       CREATED: 25/10/2017 11:59:03
 #===============================================================================
 
@@ -34,9 +34,9 @@ fi
 echo Project ID $PROJECTID
 gcloud config set project $PROJECTID
 echo -n "* Installing NPM Packages..."
-# npm install -g firebase-tools
+npm install -g firebase-tools
 cd firebase/functions/
-# npm install
+npm install
 cd ../..
 echo -n "* Creating Pub/Sub topics..."
 
