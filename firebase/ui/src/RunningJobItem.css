@@ -5,3 +5,15 @@ div.container {
   flex-direction: column;
   justify-content: space-between; */
 }
+
+div.item-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  
+}
+
+.icon {
+  height: 80%;
+}

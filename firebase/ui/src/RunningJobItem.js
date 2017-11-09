@@ -33,7 +33,11 @@ class RunningJobItem extends Component {
     return (
       <div className="container">
         <div>
-          <h4> Job ID </h4>
+
+          <h4> Job ID <a target="_blank" href={`https://developers.google.com/apis-explorer/#p/bigquery/v2/bigquery.jobs.cancel?projectId=${process.env.REACT_APP_FIREBASE_PROJECT_ID}&jobId=${encodeURIComponent(job.protoPayload.serviceData.jobInsertResponse.resource.jobName.jobId)}`} >
+            (abort)
+          </a>
+          </h4>
           <p><a target="_blank" href={`https://developers.google.com/apis-explorer/#p/bigquery/v2/bigquery.jobs.get?projectId=${process.env.REACT_APP_FIREBASE_PROJECT_ID}&jobId=${encodeURIComponent(job.protoPayload.serviceData.jobInsertResponse.resource.jobName.jobId)}`} >{job.protoPayload.serviceData.jobInsertResponse.resource.jobName.jobId}</a></p>
           <h4> Run By </h4>
           <p>
@@ -42,7 +46,6 @@ class RunningJobItem extends Component {
           <h4> Query Duration </h4>
           <p>{timer}</p>
         </div>
-
       </div>
 
     );
