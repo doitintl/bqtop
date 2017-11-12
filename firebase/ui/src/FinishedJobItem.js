@@ -3,42 +3,27 @@ import React, { Component } from 'react';
 import './FinishedJobItem.css';
 
 class GridItem extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-
-    };
-
-  }
-
-  componentDidMount() {
-
-  }
-
-  componentWillUnmount() {
-
-  }
-
   render() {
-    const { job } = this.props;
-    const isError = 'error' in job.protoPayload.serviceData.jobCompletedEvent.job.jobStatus;
+    const { job, error } = this.props;
     let details;
-    if (isError) {
+
+    if (error) {
       details = "Query Failed";
     } else {
-      let gigabyte, tier;
+      let gigabyte, tier, cost;
       const bytes = job.protoPayload.serviceData.jobCompletedEvent.job.jobStatistics.totalBilledBytes;
       if (bytes) {
         gigabyte = parseInt(job.protoPayload.serviceData.jobCompletedEvent.job.jobStatistics.totalBilledBytes, 10) / (1024 * 1024 * 1024);
         tier = parseInt(job.protoPayload.serviceData.jobCompletedEvent.job.jobStatistics.billingTier, 10);
+        cost = gigabyte * 0.005 * tier;
       } else {
-        gigabyte = parseInt(0, 10);
-        tier = parseInt(1, 10);
+        gigabyte = 0;
+        tier = 1;
+        cost = 0.0;
       }
-      details = `${gigabyte.toFixed(1)} GB / Tier ${tier} / ${(gigabyte * 0.05 * tier).toFixed(1)}`;
+      details = `${gigabyte.toFixed(1)} GB / Tier ${tier} / $${(cost).toFixed(2)}`;
     }
-    
+
     return (
       <div className="container" >
         <div>
@@ -52,7 +37,6 @@ class GridItem extends Component {
           </p>
         </div>
       </div>
-
     );
   }
 }

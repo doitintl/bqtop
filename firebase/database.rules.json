@@ -1,12 +1,17 @@
 {
-   "rules":{
-      "running-jobs":{
-        ".indexOn":["protoPayload/serviceData/jobInsertResponse/resource/jobName/jobId"]
-      },
-      "finished-jobs":{
-        ".indexOn":["protoPayload/serviceData/jobCompletedEvent/job/jobName/jobId", "receiveTimestamp"]
-      },
-      ".read":"auth != null",
-      ".write":"auth != null"
-   }
+  "rules": {
+    "running-jobs": {
+      ".indexOn": [
+        "protoPayload/serviceData/jobInsertResponse/resource/jobName/jobId"
+      ]
+    },
+    "finished-jobs": {
+      ".indexOn": [
+        "protoPayload/serviceData/jobCompletedEvent/job/jobName/jobId",
+        "receiveTimestamp"
+      ]
+    },
+    ".read": "auth != null && auth.token.email_verified == true && auth.token.email.matches(/^[a-zA-Z0-9\\+\\.\\-]+@(doit-intl|taboola)\\.com$/)",
+    ".write": "auth != null"
+  }
 }

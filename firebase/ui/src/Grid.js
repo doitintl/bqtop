@@ -63,7 +63,7 @@ class Grid extends Component {
         component="ul"
         columns={!responsive ? columns : null}
         columnWidth={200}
-        gutterWidth={gutters}
+        gutterWidth={gutters + 10}
         gutterHeight={gutters}
         layout={gridLayout}
         enter={gridEnterExitStyle.enter}

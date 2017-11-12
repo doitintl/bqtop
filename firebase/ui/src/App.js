@@ -27,7 +27,7 @@ class App extends Component {
       stiffness: 60,
       damping: 15,
       columns: 5,
-      gutters: 20,
+      gutters: 0,
       easing: easings.cubicOut
     };
 
@@ -107,38 +107,42 @@ class App extends Component {
     const now = new Date();
     const itemHeight = layout === 'simple' ? 200 : null;
 
-    const runningJobItems = runningJobs.map((job) => {
-      const createTime = new Date(job.protoPayload.serviceData.jobInsertResponse.resource.jobStatistics.createTime);
-      const secondsElapsed = Math.round((now.getTime() - createTime.getTime()) / 1000);
+    const runningJobItems =
+      runningJobs.map((job) => {
+        const createTime = new Date(job.protoPayload.serviceData.jobInsertResponse.resource.jobStatistics.createTime);
+        const secondsElapsed = Math.round((now.getTime() - createTime.getTime()) / 1000);
 
-      return (
-        <li
-          key={job.insertId}
-          className="grid-item"
-          style={{
-            width: 200,
-            height: itemHeight,
-            backgroundColor: '#C8E6C9'
-          }}>
-          <RunningJobItem job={job} secondsElapsed={secondsElapsed} />
-        </li>
-      );
-    });
+        return (
+          <li
+            key={job.insertId}
+            className="grid-item"
+            style={{
+              width: 200,
+              height: itemHeight,
+              backgroundColor: '#C8E6C9'
+            }}>
+            <RunningJobItem job={job} secondsElapsed={secondsElapsed} />
+          </li>
+        );
+      });
 
-    const finishedJobItems = finishedJobs.map((job) => {
-      return (
-        <li
-          key={job.insertId}
-          className="grid-item"
-          style={{
-            width: 200,
-            height: itemHeight,
-            backgroundColor: '#B3E5FC'
-          }}>
-          <FinishedJobItem job={job} />
-        </li>
-      );
-    });
+    const finishedJobItems =
+      finishedJobs.map((job) => {
+        const error = 'error' in job.protoPayload.serviceData.jobCompletedEvent.job.jobStatus;
+        const backgroundColor = error ? '#EF9A9A' : '#B3E5FC';
+        return (
+          <li
+            key={job.insertId}
+            className="grid-item"
+            style={{
+              width: 200,
+              height: itemHeight,
+              backgroundColor: backgroundColor
+            }}>
+            <FinishedJobItem job={job} error={error} />
+          </li>
+        );
+      });
 
     return (
       <div>

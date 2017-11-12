@@ -207,3 +207,4 @@ bqtop-service-account.json
 config.json
 add
 node_modules/
+firebase/.firebaserc
