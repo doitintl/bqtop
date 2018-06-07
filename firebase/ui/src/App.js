@@ -64,6 +64,7 @@ class App extends Component {
       if (user) {
         firebase.database().ref('running-jobs').on('child_added', (snapshot) => {
           const newJob = snapshot.val();
+          newJob.key = snapshot.key;
           let runningJobs = this.state.runningJobs.slice();
           runningJobs.push(newJob);
           runningJobs = this.sortJobsByCreateTime(runningJobs);
@@ -74,11 +75,21 @@ class App extends Component {
 
         firebase.database().ref('running-jobs').on('child_removed', (snapshot) => {
           const removedJob = snapshot.val();
-          let runningJobs = this.state.runningJobs.filter(function (job) {
+          let runningJobs = this.state.runningJobs.slice().filter(function (job) {
             return job.insertId !== removedJob.insertId;
           });
           runningJobs = this.sortJobsByCreateTime(runningJobs);
           this.setState({ runningJobs });
+        }, (error) => {
+          console.error(error);
+        });
+
+        firebase.database().ref('finished-jobs').on('child_removed', (snapshot) => {
+          const removedJob = snapshot.val();
+          let finishedJobs = this.state.finishedJobs.slice().filter(function (job) {
+            return job.insertId !== removedJob.insertId;
+          });
+          this.setState({ finishedJobs });
         }, (error) => {
           console.error(error);
         });
@@ -93,6 +104,10 @@ class App extends Component {
         });
       }
     });
+  }
+
+  handleClear = key => () => {
+    firebase.database().ref('running-jobs').child(key).remove();
   }
 
   componentWillUnmount() {
@@ -121,7 +136,7 @@ class App extends Component {
               height: itemHeight,
               backgroundColor: '#C8E6C9'
             }}>
-            <RunningJobItem job={job} secondsElapsed={secondsElapsed} />
+            <RunningJobItem job={job} onClear={this.handleClear(job.key)} secondsElapsed={secondsElapsed} />
           </li>
         );
       });

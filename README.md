@@ -6,23 +6,26 @@ This repository contains the BQTop utility for viewing running and finished Big-
 
 ## Setup
 
-### Firebase
+**Important**: Make sure you do not deploy to a project which already makes use of Firebase Real-Time Database or Hosting.
+
+### Firebase Setup
 
 1. In your google cloud project create a Firebase project.
 2. Go to overview page and press `Add Firebase to your web app`
 3. Copy the following keys: `apiKey, authDomain, databaseURL storageBucket`
-4. Navigate to the [Service Accounts](https://console.firebase.google.com/project/_/settings/serviceaccounts/adminsdk/) tab in your project's settings page.
-5. Select your Firebase project.
-6. Generate New Private Key at the bottom of the Firebase Admin SDK section of the Service Accounts tab.
-7. After you click the button, a JSON file containing your service account's credentials will be downloaded.
-8. Rename the file `bqtop-service-account.json` and save it in the `cli` directory.
-9. Install gcloud tools. Please follow the [official documentation](https://cloud.google.com/sdk/downloads)
-10. Run `./install.sh projectId`
+4. Navigate to the Authentication page and enable Google as a sign-in provider.
+5. Install gcloud tools. Please follow the [official documentation](https://cloud.google.com/sdk/downloads)
 
 ### CLI
-1. Make sure that you have python 3 installed.
-2. Go to the cli directory and run `pip install -r requirements.txt` 
-3. Create a config file (config.json) with the values you copied in the Firebase setup process. 
+
+1. Navigate to the [Service Accounts](https://console.firebase.google.com/project/_/settings/serviceaccounts/adminsdk/) tab in your project's settings page.
+2. Select your Firebase project.
+3. Generate New Private Key at the bottom of the Firebase Admin SDK section of the Service Accounts tab.
+4. After you click the button, a JSON file containing your service account's credentials will be downloaded.
+5. Rename the file `bqtop-service-account.json` and save it in the `cli` directory.
+6. Make sure that you have python 3 installed.
+7. Go to the cli directory and run `pip install -r requirements.txt` 
+8. Create a config file (config.json) with the values you copied in the Firebase setup step. 
 
 ```python
 {
@@ -35,13 +38,19 @@ This repository contains the BQTop utility for viewing running and finished Big-
 ```
 
 ### Web Application
-1. Create `.env.production` in [firebase/ui](firebase/ui) with the values you copied in the Firebase setup process.
-```
-REACT_APP_FIREBASE_API_KEY="apiKey"
-REACT_APP_FIREBASE_AUTH_DOMAIN="authDomain"
-REACT_APP_FIREBASE_DATABASE_URL="databaseURL"
-REACT_APP_FIREBASE_PROJECT_ID="projectId"
-REACT_APP_FIREBASE_STORAGE_BUCKET="storageBucket"
-```
-2. In Firebase console Authentication page, enable Google as sign-in provider.
-3. OPTIONAL: Edit firebase rules to allow specific logged in users to read data instead of any authenticated user.
+
+1. Edit `.env.production.template` in [firebase/ui](firebase/ui) with the values you copied in the Firebase setup process.
+2. Rename `.env.production.template` to `.env.production`
+3. OPTIONAL: Edit `database.rules.json` to allow specific users to read data. By default, any authenticated user can read/write to the database.
+    For example:
+    ```json
+    {
+        // ...
+        ".read": "auth != null && auth.token.email_verified == true && auth.token.email == 'me@example.com'",
+        ".write": "auth != null && auth.token.email_verified == true && auth.token.email == 'me@example.com'"
+    }
+    ```
+
+### Deployment
+
+- Run `./install.sh PROJECT_ID`
