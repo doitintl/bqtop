@@ -12,6 +12,6 @@
       ]
     },
     ".read": "auth != null && auth.token.email_verified == true",
-    ".write": "auth != null"
+    ".write": "auth != null && auth.token.email_verified == true"
   }
 }
