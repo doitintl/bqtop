@@ -6,6 +6,8 @@ This repository contains the BQTop utility for viewing running and finished Big-
 
 ## Setup
 
+**Important**: Make sure you do not deploy to a project which already makes use of Firebase Real-Time Database or Hosting.
+
 ### Firebase Setup
 
 1. In your google cloud project create a Firebase project.
